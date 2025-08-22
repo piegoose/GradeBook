@@ -1,0 +1,61 @@
+Projekt: Nano-MVP e-dziennika (Spring Boot + PostgreSQL, bez Flyway)
+
+Cel:
+Stworzyć minimalną aplikację Spring Boot, która łączy się z bazą PostgreSQL, posiada dwóch użytkowników (ADMIN i TEACHER) oraz umożliwia:
+- publiczny podgląd planu lekcji (LessonSlot)
+- dodawanie nowych pozycji planu tylko przez ADMINA
+- testowy endpoint prywatny
+
+Kroki do wykonania:
+
+1) Konfiguracja projektu
+   - Utwórz projekt w Spring Initializr z dependencjami:
+     Spring Web, Spring Security, Spring Data JPA, Validation, PostgreSQL Driver, Lombok
+   - W pliku application.yml ustaw:
+     spring.jpa.hibernate.ddl-auto=update
+     poprawne dane do połączenia z PostgreSQL
+
+2) Encje:
+   a) User:
+      - id (Long, @Id, @GeneratedValue)
+      - email (String, unikalny)
+      - passwordHash (String)
+      - role (Enum: ADMIN, TEACHER, STUDENT)
+   b) LessonSlot:
+      - id (Long, @Id, @GeneratedValue)
+      - dayOfWeek (DayOfWeek)
+      - startTime (LocalTime)
+      - endTime (LocalTime)
+      - subject (String)
+      - teacherName (String)
+      - className (String)
+
+3) Repozytoria:
+   - UserRepository (findByEmail)
+   - LessonSlotRepository (extends JpaRepository)
+
+4) Inicjalizacja danych:
+   - W pliku data.sql dodaj:
+     - Rolę ADMIN i TEACHER (tu jako enum w polu role)
+     - Dwóch użytkowników (admin, teacher) z hasłami zakodowanymi BCrypt
+     - Kilka przykładowych LessonSlot
+
+5) Konfiguracja Spring Security:
+   - Włącz httpBasic
+   - Wymagaj autoryzacji dla POST /lesson-slots oraz /hello-private
+   - Zezwól na GET /lesson-slots bez logowania
+   - Utwórz CustomUserDetailsSerPvice pobierający użytkownika po emailu i rolach
+
+6) Endpointy:
+   - LessonSlotController:
+     GET /lesson-slots (publiczny)
+     POST /lesson-slots (tylko ADMIN)
+   - TestController:
+     GET /hello-private (dowolna zalogowana rola)
+
+Kryteria akceptacji:
+- Po uruchomieniu aplikacji Hibernate utworzy tabele users i lesson_slot
+- data.sql wstawi użytkowników i plan lekcji
+- GET /lesson-slots działa bez logowania
+- POST /lesson-slots działa tylko po zalogowaniu jako ADMIN
+- GET /hello-private działa tylko po zalogowaniu
