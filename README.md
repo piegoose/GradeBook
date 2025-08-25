@@ -1,6 +1,6 @@
-# 📘 GradeBook – Nano MVP e-diary
+# 📘 GradeBook e-diary
 
-A minimal **Spring Boot + PostgreSQL** application that manages a school schedule.  
+**Spring Boot + PostgreSQL** application that manages a school schedule.  
 This project is being built step by step to practice JPA, entity relationships, and building a REST API.
 
 ---
