@@ -1,26 +1,25 @@
 package pl.piegoose.gradebook.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.Date;
 
+@Entity
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@Table(name = "classroom")
-@Entity
-
+@Table(name="classroom")
 public class Classroom {
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long id;
+    private Long id; // czemu nie mozna BIG DECIMAL
+    @Column(nullable = false, unique = true)
     private String name;
-    private LocalDate schoolYear;
-
+    private Date schoolYear;
 }
